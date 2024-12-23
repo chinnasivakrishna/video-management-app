@@ -9,7 +9,7 @@ const app = express();
 // Middleware
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:3000', // Your frontend URL
+  origin: 'https://video-management-app-front-end-5fa8.vercel.app', // Your frontend URL
   credentials: true, // Important for cookies
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
