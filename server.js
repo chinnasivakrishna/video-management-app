@@ -9,7 +9,7 @@ const app = express();
 // Middleware
 app.use(cookieParser());
 app.use(cors({
-  origin: 'https://video-management-app-front-end-5fa8.vercel.app', // Your frontend URL
+  origin: ['https://video-management-app-front-end-5fa8.vercel.app', 'https://video-management-app-front-end.vercel.app'], // List of allowed origins
   credentials: true, // Important for cookies
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
