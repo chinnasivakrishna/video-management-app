@@ -1,34 +1,35 @@
 const express = require('express');
-const dotenv = require('dotenv');
-const cookieParser = require('cookie-parser');
-const connectDB = require('./config/db');
-const authRoutes = require('./routes/authRoutes');
-const videoRoutes = require('./routes/videoRoutes'); // Import video routes
+const mongoose = require('mongoose');
 const cors = require('cors');
-
-// Load environment variables
-dotenv.config();
-
-// Connect to database
-connectDB();
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(express.json());
 app.use(cookieParser());
-const corsOptions = {
-  origin: 'http://localhost:3000', // Allow only this origin
-  credentials: true, // Allow credentials (cookies, authorization headers)
-};
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'http://localhost:3000', // Your frontend URL
+  credentials: true, // Important for cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
+}));
+app.use(express.json());
+app.use('/uploads', express.static('uploads'));
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/videos', videoRoutes); // Add video routes
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/videos', require('./routes/videoRoutes'));
 
-// Start the server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
